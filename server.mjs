@@ -7,7 +7,7 @@ import { Tarefa } from "./app/models/tarefa.mjs";
 import { Usuario } from "./app/models/usuario.mjs";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
