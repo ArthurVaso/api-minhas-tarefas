@@ -1,7 +1,7 @@
 /**
 *@swagger
 *   definitions:
-*       CreateUser:
+*       CriarUsuario:
 *           type: object
 *           properties:
 *               nome:

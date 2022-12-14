@@ -11,7 +11,7 @@
     
     "db:create": "npx sequelize-cli db:create",
     "db:up": "npx sequelize-cli db:migrate",
-    "db::down": "npx sequelize-cli db:migrate:undo:all"
+    "db:down": "npx sequelize-cli db:migrate:undo:all"
   },
   "keywords": [
     "nodejs",

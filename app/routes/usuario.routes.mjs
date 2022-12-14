@@ -15,7 +15,7 @@ const router = express.Router();
  *          - in: body
  *            name: Usuario
  *            schema:
- *               $ref: '#/definitions/CreateUser'
+ *               $ref: '#/definitions/CriarUsuario'
  *      responses:
  *          201:
  *              description: Criando um novo usuário.
