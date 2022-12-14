@@ -12,20 +12,25 @@ export const Usuario = dbConfig.define(
             allowNull: false
         },
         nome: {
-            type: DataTypes.STRING(100)
+            type: DataTypes.STRING(100),
+            allowNull: false
         },
         sobrenome: {
-            type: DataTypes.STRING(100)
+            type: DataTypes.STRING(100),
+            allowNull: false
         },
         email: {
             type: DataTypes.STRING(100),
+            allowNull: false,
             unique: true
         },
         senha: {
-            type: DataTypes.STRING(256)
+            type: DataTypes.STRING(256),
+            allowNull: false
         },
         ativo: {
-            type: DataTypes.BOOLEAN
+            type: DataTypes.BOOLEAN,
+            allowNull: false
         }
     },
     { freezeTableName: true, timestamps: false }

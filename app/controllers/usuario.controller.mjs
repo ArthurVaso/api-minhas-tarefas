@@ -33,9 +33,9 @@ export const createUsuario = async (req, res) => {
     const refreshToken = refreshAuthentication(usuario.id);
 
     return res.status(201).json({
-      usuario,
+      refreshToken,
       token,
-      refreshToken
+      usuario
     })
   } catch (error) {
     if(error.name === 'SequelizeUniqueConstraintError') {
@@ -50,23 +50,23 @@ export const login = async (req, res) => {
   try {
     const {email, senha} = req.body;
 
-    const usuario = await Usuario.findOne({
+    const usuarioCheck = await Usuario.findOne({
       where: {
         email: email
       }
     })
 
-    if(!usuario) {
+    if(!usuarioCheck) {
       return res.status(500).json({ message: "Email e/ou senha inválido(s)!" })
     }
 
-    const isValid = await bcrypt.compare(senha.toString(), usuario.senha.toString())
+    const isValid = await bcrypt.compare(senha.toString(), usuarioCheck.senha.toString())
 
     if(!isValid) {
       return res.status(500).json({ message: "Email e/ou senha inválido(s)!" })
     }
 
-    if(!usuario.ativo) {
+    if(!usuarioCheck.ativo) {
       await Usuario.update({
         ativo: true,
       },
@@ -77,13 +77,19 @@ export const login = async (req, res) => {
       })
     }
 
+    const usuario = await Usuario.findOne({
+      where: {
+        email: email
+      }
+    })
+
     const token = authentication(usuario.id);
     const refreshToken = refreshAuthentication(usuario.id);
 
     return res.status(200).json({
-      usuario,
+      refreshToken,
       token,
-      refreshToken
+      usuario
     })
   } catch (error) {
     return res.status(500).json({ mensagem: err.message })
@@ -123,6 +129,7 @@ export const updateOne = async (req, res) => {
   try {
     delete req.body.id;
     delete req.body.email;
+    delete req.body.senha;
 
     const usuario = await Usuario.update(req.body, {
       where:{
@@ -165,102 +172,8 @@ export const deleteOne = async (req, res) => {
       }
     })
 
-    //logout
-
     return res.status(200).json({ message: "Obrigado por usar nosso sistema." })
   } catch (error) {
     return res.status(500).json( {message: error.message} )
   }
 }
-
-/*
-// Create and Save a new Tutorial
-exports.create = (req, res) => {
-    console.log("1");
-  if (!req.body.nome) {
-    res.status(400).send({
-        message: "Nome não pode estar vazio!"
-    });
-    
-    console.log("2");
-    return;
-  }
-
-  if (!req.body.sobrenome) {
-    res.status(400).send({
-        message: "Sobrenome não pode estar vazio!"
-    });
-    return;
-  }
-  
-  if (!req.body.email) {
-    res.status(400).send({
-        message: "E-mail não pode estar vazio!"
-    });
-    return;
-  }
-  
-  if (!req.body.senha) {
-    res.status(400).send({
-        message: "Senha não pode estar vazio!"
-    });
-    return;
-  }
-
-  //if(preg_match('/\A(?=[\x20-\x7E]*?[A-Z])(?=[\x20-\x7E]*?[a-z])(?=[\x20-\x7E]*?[0-9])[\x20-\x7E]{8,}\z/', req.body.senha))
-  //  echo("valid password");
-
-  console.log("3");
-  const usuario = {
-      nome: req.body.nome,
-      sobrenome: req.body.sobrenome,
-      email: req.body.email,
-      senha: req.body.senha,
-      ativo: false
-  };
-
-  Usuario.create(usuario)
-  .then(dados => {
-    
-    console.log("4");
-    res.send(dados);
-  })
-  .catch(err => {
-    res.status(500).send({
-        message:
-        err.message || "Ocorreu algum erro ao criar o usuário."
-    })
-  })
-};
-
-
-// Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
-  
-};
-
-// Find a single Tutorial with an id
-exports.findOne = (req, res) => {
-  
-};
-
-// Update a Tutorial by the id in the request
-exports.update = (req, res) => {
-  
-};
-
-// Delete a Tutorial with the specified id in the request
-exports.delete = (req, res) => {
-  
-};
-
-// Delete all Tutorials from the database.
-exports.deleteAll = (req, res) => {
-  
-};
-
-// Find all published Tutorials
-exports.findAllPublished = (req, res) => {
-  
-};
-*/
