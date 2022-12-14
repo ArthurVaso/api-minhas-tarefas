@@ -3,7 +3,7 @@ import { Tarefa } from '../models/tarefa.mjs';
 export const createTarefa = async (req, res) => {
     try {
         if(!req?.body?.titulo) {
-            return res.status(404).json({ message: "O título da tarefa é obrigatório." })
+            return res.status(401).json({ message: "O título da tarefa é obrigatório." })
         }
 
         const tarefaQuery = await Tarefa.findOne({
@@ -16,6 +16,8 @@ export const createTarefa = async (req, res) => {
         if(tarefaQuery) {
             return res.status(404).json({ message: "O título informado já está em uso." })
         }
+
+        req.body.concluida = false;
 
         const tarefa = await Tarefa.create(req.body);
 
@@ -59,18 +61,15 @@ export const getAllByUsuarioId = async (req, res) => {
 
 export const getAllByData = async (req, res) => {
     try {
-        const usuario_id = req.body.usuario_id;
-        const data_limite = req.body.data_limite;
-
         const tarefa = await Tarefa.findAll({
             where: {
-                usuario_id: req.body.usuario_id,
-                data_limite: req.body.data_limite
+                usuario_id: req.params.usuario_id,
+                data_limite: req.params.data_limite
             }
         })
 
         if(tarefa.length == 0) {
-            return res.status(404).json({ message: "Nada a fazer nesta data." })
+            return res.status(401).json({ message: "Nada a fazer nesta data." })
         }
 
         return tarefa !== null ? res.status(200).json(tarefa) : res.status(404).json({ message: "Usuário inválido." })
@@ -97,7 +96,7 @@ export const updateOne = async (req, res) => {
     try {
         delete req.body.id;
         delete req.body.usuario_id;
-        delete req.body.concluido;
+        delete req.body.concluida;
     
         const usuario = await Tarefa.update(req.body, {
           where:{
@@ -125,7 +124,7 @@ export const finishOne = async (req, res) => {
         if(updateRows) {
           res.status(200).send();
         } else {
-          return res.status(404).json({ message: "Tarefa concluída."})
+          return res.status(404).json({ message: "A tarefa já foi concluída."})
         }
       } catch (error) {
         return res.status(500).json({ message: error.mensagem })

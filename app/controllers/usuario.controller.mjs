@@ -177,3 +177,56 @@ export const deleteOne = async (req, res) => {
     return res.status(500).json( {message: error.message} )
   }
 }
+
+export const alterarSenha = async (req, res) => {
+  try{
+    const email = req.body.email;
+    const senha_atual = req.body.senha_atual;
+    const nova_senha = req.body.nova_senha;
+
+    const padraoEmail = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
+
+    if(!email) {
+      return res.status(500).json({ message: "O e-mail é obrigatório." })
+    }
+
+    if(!padraoEmail) {
+      return res.status(500).json({ message: "E-mail inválido." })
+    }
+
+    const usuario = await Usuario.findOne({
+      where: {
+        email: email
+      }
+    })
+
+    if(!senha_atual) {
+      return res.status(500).json({ message: " A senha atual é obrigatória." })
+    }
+
+    if(!nova_senha) {
+      return res.status(500).json({ message: " A nova senha é obrigatória." })
+    }
+
+    const salt = await bcrypt.genSaltSync(10);
+    const hash = await bcrypt.hashSync(nova_senha, salt);
+
+    const isValid = await bcrypt.compare(senha_atual, usuario.senha.toString());
+
+    if(!isValid) {
+      return res.status(500).json({ message: "Senha inválida."})
+    }
+
+    req.body = {"senha": hash};
+
+    const atualizarUsuario = await Usuario.update(req.body, {
+      where: {
+        email: email
+      }
+    })
+
+    return atualizarUsuario >= 1 ? res.status(200).json({ message: "Senha Atualizada!"}) : res.status(500).json({ message: "Ocorreu um erro ao tentar atualizar a senha." })
+  }catch(error) {
+    return res.status(500).json({ message: error.message });
+  }
+}

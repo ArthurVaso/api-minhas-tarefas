@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../config/jwt.mjs";
-import { createUsuario, deleteOne, getAll, getOne, inactiveOne, login, updateOne } from "../controllers/usuario.controller.mjs";
+import { alterarSenha, createUsuario, deleteOne, getAll, getOne, inactiveOne, login, updateOne } from "../controllers/usuario.controller.mjs";
 
 const router = express.Router();
 
@@ -124,6 +124,30 @@ router.get("/:id", verifyToken, getOne)
  *         description: Atualizou as informações.
 */
 router.put("/atualizar/:id", verifyToken, updateOne)
+
+/**
+ * @swagger
+ * /usuario/atualizar_senha/{id}:
+ *   patch:
+ *     tags: ['Usuario']
+ *     summary: Atualizar senha do usuário.
+ *     description: Atualizar senha do usuário.
+ *     parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           description: O número do ID de um usuário.
+ *           schema:
+ *              type: integer
+ *         - in: body
+ *           name: atualizarSenha
+ *           schema:
+ *              $ref: '#/definitions/AtualizarSenha'
+ *     responses:
+ *       200:
+ *         description: Senha Atualizada!.
+*/
+router.patch("/atualizar_senha/:id", verifyToken, alterarSenha)
 
 /**
  * @swagger
