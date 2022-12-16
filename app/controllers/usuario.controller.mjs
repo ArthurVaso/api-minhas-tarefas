@@ -92,7 +92,7 @@ export const login = async (req, res) => {
       usuario
     })
   } catch (error) {
-    return res.status(500).json({ mensagem: err.message })
+    return res.status(500).json({ mensagem: error.message })
 }
 }
 
@@ -130,6 +130,7 @@ export const updateOne = async (req, res) => {
     delete req.body.id;
     delete req.body.email;
     delete req.body.senha;
+    delete req.body.ativo;
 
     const usuario = await Usuario.update(req.body, {
       where:{

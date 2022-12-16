@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /usuario:
+ * /usuario/create:
  *    post:
  *      tags: ['Usuario']
  *      summary: Criar um novo usuário.
@@ -20,7 +20,7 @@ const router = express.Router();
  *          201:
  *              description: Criando um novo usuário.
 */
-router.post("/", createUsuario);
+router.post("/create", createUsuario);
 
 /**
  * @swagger
