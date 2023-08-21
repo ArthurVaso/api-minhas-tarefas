@@ -1,4 +1,4 @@
-# <h1> <img src="https://user-images.githubusercontent.com/101563304/207380402-0dbd9eb1-0843-4703-8c7a-bcdf05abbf7e.gif" alt="api-minhas-tarefas" width="80"/> <strong>api-minhas-tarefas</strong> </h1> 
+# <img src="https://user-images.githubusercontent.com/101563304/207380402-0dbd9eb1-0843-4703-8c7a-bcdf05abbf7e.gif" alt="api-minhas-tarefas" width="80"/> <strong>api-minhas-tarefas</strong>
 
 ## Comandos úteis
 
